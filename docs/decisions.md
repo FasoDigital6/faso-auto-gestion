@@ -1,12 +1,12 @@
 # Système de gestion Sacko-Green Inc : décisions
 
-Récapitulatif des décisions prises lors de l'interview de cadrage (5 tours, Q1 à Q57) avec Amadou, le 22 octobre 2026. Ce document fait foi pour le développement : toute décision qui change ensuite s'ajoute ici, avec sa date.
+Récapitulatif des décisions prises lors de l'interview de cadrage (5 tours, Q1 à Q57) avec Amadou, le 22 octobre 2026, mis à jour le 26 octobre 2026. Ce document fait foi pour le développement : toute décision qui change ensuite s'ajoute ici, avec sa date. Ce n'est pas un cahier des charges détaillé : les écrans et le modèle de données se précisent étape par étape (voir `CLAUDE.md`).
 
 ## 1. Cadre du projet
 
 | # | Décision |
 |---|---|
-| — | **Pas de SaaS.** Outil sur mesure pour Sacko-Green Inc seul, hébergé en ligne. Pas de multi-entreprises. |
+| — | **Pas de SaaS.** Outil sur mesure pour Sacko-Green Inc seul (nom légal : **Sacko-Vert Inc.**, 1936, boulevard Saint-Régis, Dorval (Québec) H9P 1H6), hébergé en ligne. Pas de multi-entreprises. |
 | Q1 | Tous les modules sont développés ; pas de livraison partielle au client. |
 | Q2 | Développement : Amadou avec Claude. |
 | Q7 | Interface en français uniquement. |
@@ -80,8 +80,8 @@ API gratuite de la NHTSA (vPIC). Scan du code-barres avec l'appareil photo ou sa
 | # | Décision |
 |---|---|
 | Q6, Q15 | Devises USD, CAD et GNF. Chaque montant est enregistré dans sa devise d'origine avec les taux du jour de l'opération. Chaque utilisateur choisit dans ses préférences sa devise d'affichage. Les rapports convertissent avec les taux figés : une marge passée ne change pas quand les taux changent. Seul l'admin modifie les taux. |
-| Q16 | La TPS de 5 % payée à l'encan est enregistrée comme **taxe récupérable**, hors coût de revient. Un rapport par période donne la TPS payée et la TPS collectée. |
-| Q17 | Case « Appliquer la TPS (5 %) » sur chaque vente, décochée par défaut. Taux réglable. |
+| Q16 | La **TPS (5 %) et la TVQ (9,975 %)** payées à l'encan sont enregistrées comme **taxes récupérables**, hors coût de revient. Un rapport par période donne la TPS et la TVQ payées et collectées. *(modifié le 26 octobre 2026, voir section 15)* |
+| Q17 | Case « Appliquer les taxes (TPS 5 % et TVQ 9,975 %) » sur chaque vente, décochée par défaut (ventes à l'export). Taux réglables séparément. *(modifié le 26 octobre 2026, voir section 15)* |
 | Q9 | Pas de paiement en ligne. Les paiements sont saisis à la main, avec le moyen utilisé (Interac, virement, espèces, Orange Money…). |
 
 ## 6. Clients, commandes et argent
@@ -91,7 +91,7 @@ API gratuite de la NHTSA (vPIC). Scan du code-barres avec l'appareil photo ou sa
 | Q29 | Fiche client : nom, téléphone WhatsApp au format international, e-mail (facultatif), pays et ville, type (particulier / gros client), site de rattachement, notes. Pas de pièce d'identité obligatoire. |
 | Q30 | Une commande regroupe plusieurs lignes : véhicules, marchandises, services (fret, dédouanement). |
 | Q23 | **Un seul relevé de compte par client** : ventes, fret, marchandises, achats faits pour lui avec son argent avancé, et ses paiements. Le solde dû vient de ce relevé. Une marchandise non payée est donc une dette sans action de plus. Un paiement peut se répartir sur plusieurs commandes ou rester en avance sur le compte. |
-| Q31 | Facture PDF reproduite **à l'identique d'après la facture actuelle de Sacko-Green** (modèle à fournir). Reçu PDF pour chaque paiement. |
+| Q31 | **Facture PDF simple** avec le logo, les mentions et les numéros de TPS et TVQ de Sacko-Vert Inc. (on ne reproduit pas leur facture actuelle). Reçu PDF pour chaque paiement. *(modifié le 26 octobre 2026, voir section 15)* |
 | Q38 | On ne supprime jamais un paiement, une vente ou une facture : on l'annule avec un motif, et il reste visible, barré. Seul l'admin annule. |
 | Q37 | Journal d'audit : qui a changé quoi et quand (prix, statuts, paiements, approbations, remises), consultable sur chaque fiche. |
 | Q46 | Pas d'espace client avec connexion. Le client reçoit seulement des liens sécurisés : fiche publique, dossier de dédouanement, factures et reçus. |
@@ -103,22 +103,22 @@ API gratuite de la NHTSA (vPIC). Scan du code-barres avec l'appareil photo ou sa
 | Q34 | Fiche conteneur : numéro de conteneur, numéro de booking, compagnie, navire, port de départ, date de départ, date d'arrivée prévue à Conakry, coût total, taux de remplissage. Chaque ligne (véhicule ou marchandise) est rattachée à un client. |
 | Q42 | Dossier de dédouanement **par client et par conteneur**. Fichiers déposés : connaissement, titre de propriété, preuve d'exportation, autres. Fichiers générés : facture commerciale, liste de colisage. |
 | Q43 | Envoi bloqué si le client a encore un solde dû sur ce conteneur. L'admin peut passer outre, avec un motif enregistré au journal. |
-| Q44 | Protection : lien personnel + code à 6 chiffres envoyé dans un second message, expiration après 7 jours (réglable, renvoyable), filigrane au nom du client sur chaque PDF, journal des ouvertures et téléchargements, révocation par l'admin. Jamais de pièce jointe directe sur WhatsApp. |
+| Q44 | Protection : lien personnel + code à 6 chiffres envoyé dans un second message, expiration après 7 jours (réglable, renvoyable), filigrane au nom du client sur chaque PDF, journal des ouvertures et téléchargements, révocation par l'admin. Lien et code envoyés par e-mail (deux messages séparés) ; jamais de pièce jointe directe. *(modifié le 26 octobre 2026, voir section 15)* |
 | Q45 | Le dossier peut partir au client, à son transitaire ou à toute personne qu'il désigne. Le destinataire est saisi à l'envoi et tracé au journal. |
 
 ## 8. Notifications
 
 | # | Décision |
 |---|---|
-| Q25 | WhatsApp par l'**API Cloud de Meta**. Prévoir une interface d'envoi unique, pour pouvoir changer de fournisseur sans toucher au reste. E-mail par Resend. |
-| Q32 | Messages : véhicule acheté (avec photos), embarqué (conteneur, navire, arrivée prévue), arrivé à Conakry, dossier de dédouanement prêt, livré (remerciement), rappel de paiement. Chaque type s'active ou se coupe dans les paramètres ; un client peut être exclu des envois. |
-| Q33 | Rappels de paiement : par défaut tous les 7 jours tant que le solde est positif et que la voiture est arrivée à Conakry. Fréquence et conditions réglables. Bouton d'envoi manuel. |
+| Q25 | **Pas d'envoi automatisé de messages WhatsApp** (option future, sur devis). Toutes les notifications partent **par e-mail via Resend**, derrière une interface d'envoi unique pour pouvoir ajouter un canal plus tard. *(modifié le 26 octobre 2026, voir section 15)* |
+| Q32 | E-mails : véhicule acheté (avec photos), embarqué (conteneur, navire, arrivée prévue), arrivé à Conakry, dossier de dédouanement prêt, livré (remerciement), rappel de paiement. Chaque type s'active ou se coupe dans les paramètres ; un client peut être exclu des envois. |
+| Q33 | Rappels de paiement **par e-mail** : par défaut tous les 7 jours tant que le solde est positif et que la voiture est arrivée à Conakry. Fréquence et conditions réglables. Bouton d'envoi manuel. |
 
 ## 9. Fiche publique et QR
 
 | # | Décision |
 |---|---|
-| Q26 | Feuille PDF d'étiquettes à coller sur les autocollants existants : QR code, marque, modèle, année, fin du VIN. La fiche publique montre les photos publiques et le prix affiché, avec les boutons « Commander » et « WhatsApp ». Une voiture réservée ou vendue affiche « Vendu », sans prix. |
+| Q26 | Feuille PDF d'étiquettes à coller sur les autocollants existants : QR code, marque, modèle, année, fin du VIN. La fiche publique montre les photos publiques et le prix affiché, avec les boutons « Commander » et « WhatsApp » (simple lien `wa.me` qui ouvre une conversation, sans automatisation). Une voiture réservée ou vendue affiche « Vendu », sans prix. |
 
 ## 10. Rôles et accès
 
@@ -143,31 +143,45 @@ Filtrable par site et par période, dans la devise de l'utilisateur :
 | # | Décision |
 |---|---|
 | Q47 | Firestore et Cloud Functions en `northamerica-northeast1` (Montréal), Vercel en `iad1`. La région Firestore est définitive dès la création du projet. |
-| Q48 | Comptes Firebase (`sackogreen-dev`, `sackogreen-prod`), Vercel, Resend et Meta créés au nom de Sacko-Green ; FasoDigital ajouté comme administrateur. |
+| Q48 | **Hébergement géré par FasoDigital** : FasoDigital crée et gère les projets Firebase (`sackogreen-dev`, `sackogreen-prod`), Vercel, Resend et le nom de domaine. Sacko-Green obtient un accès sur demande ; frais refacturés au coût réel. En fin de contrat, comptes, domaine et données sont transférés au client s'il le demande. *(modifié le 26 octobre 2026, voir section 15)* |
 | Q50 | Coûts d'achat dans un document séparé `vehicules/{id}/prive/couts`, refusé par les règles Firestore sans la permission « voir les coûts ». |
 | Q51 | Prix plancher, répartition des paiements, annulations et dossiers de dédouanement passent par des actions serveur. Les écritures du relevé sont immuables (annulation = nouvelle écriture). Solde recalculé par Cloud Function. |
 | Q52 | La fiche publique lit uniquement `vitrine/{id}` (photos publiques, description, prix affiché, statut), tenu à jour par Cloud Function. |
 | Q53 | Documents de dédouanement privés dans Storage. La page sécurisée vérifie lien, code et expiration ; le serveur ajoute le filigrane (`pdf-lib`) au téléchargement et journalise l'accès. |
-| Q57 | Tous les calculs dans `src/domain` avec tests chiffrés (marges, arrondis, conversions, soldes, répartition du fret, TPS). `pnpm check` vert avant chaque livraison, tests e2e sur émulateurs, documentation dans le même commit que le code. |
+| Q57 | Tous les calculs dans `src/domain` avec tests chiffrés (marges, arrondis, conversions, soldes, répartition du fret, TPS et TVQ). `pnpm check` vert avant chaque livraison, tests e2e sur émulateurs, documentation dans le même commit que le code. |
 
 ## 13. Ordre de développement (Q56)
 
-1. **Socle** : connexion, rôles, sites, paramètres, taux de change. Lancer la validation Meta Business en parallèle.
+1. **Socle** : connexion, rôles, sites, paramètres, taux de change.
 2. **Véhicules** : VIN, photos, coûts, statuts, journal.
 3. **Prix** : marges, prix affiché et plancher, approbations.
 4. **Clients et argent** : clients, commandes, relevé, paiements, reçus PDF.
 5. **Conteneurs** : chargements, marchandises, répartition du fret.
-6. **Facture PDF** d'après le modèle de Sacko-Green.
+6. **Facture PDF** simple, avec les mentions de Sacko-Vert Inc.
 7. **Dédouanement** : dossiers, liens sécurisés, filigrane.
-8. **Notifications** : e-mail, puis WhatsApp, et rappels.
+8. **Notifications** : e-mails automatiques et rappels de paiement par e-mail.
 9. **QR** : étiquettes et fiche publique.
-10. **Pilotage** : tableau de bord, alertes de stock, rapport TPS.
+10. **Pilotage** : tableau de bord, alertes de stock, rapport TPS et TVQ.
 
 ## 14. À fournir ou à décider
 
-- [ ] Modèle de la facture actuelle de Sacko-Green (nécessaire à l'étape 6).
-- [ ] Numéro de TPS de Sacko-Green (en-tête des factures).
+- [ ] Logo et mentions à faire figurer sur la facture (étape 6). Numéros connus d'après leur facture n° 059 : TPS 718120223RT0001, TVQ 1232329960TQ0001 (à confirmer).
 - [ ] Nom de domaine (Q27).
-- [ ] Création des comptes Firebase, Vercel, Resend et Meta Business au nom de Sacko-Green.
-- [ ] Numéro de téléphone dédié pour WhatsApp Business (pas déjà utilisé dans l'application WhatsApp).
-- [ ] Confirmation par leur comptable du traitement de la TPS (Q16, Q17).
+- [ ] Création par FasoDigital des projets Firebase (région `northamerica-northeast1`), Vercel et Resend.
+- [ ] Confirmation par leur comptable du traitement de la TPS et de la TVQ (Q16, Q17).
+
+## 15. Modifications après le cadrage (26 octobre 2026)
+
+Décisions prises lors de la préparation de la proposition commerciale et du contrat.
+
+| Sujet | Avant | Maintenant |
+|---|---|---|
+| Province et taxes (Q16, Q17) | Alberta, TPS seule | Québec : TPS 5 % et TVQ 9,975 % |
+| WhatsApp (Q25, Q32, Q33, Q44) | Messages automatiques par l'API Meta | Retiré du périmètre ; notifications, rappels et liens de dédouanement par e-mail |
+| Facture (Q31) | Copie de leur facture actuelle | Facture simple aux mentions de Sacko-Vert Inc. |
+| Comptes et hébergement (Q48) | Au nom de Sacko-Green, payés par eux | Gérés par FasoDigital, accès client sur demande, frais refacturés |
+
+**Contexte commercial** (n'affecte pas le code) : projet facturé 8 500 CAD (50 % à la signature, 50 % à la mise en production), garantie de 3 mois, maintenance annuelle de 2 500 USD (ou 1 250 USD par semestre, ou 250 USD par mois). Représentant de FasoDigital : Mohamed Camara. Contrat régi par le droit du Québec (Loi 25 pour les renseignements personnels).
+
+**Site vitrine** : il existe déjà dans le dépôt `FasoDigital6/sacko-green-vitrine` (Next.js 16, catalogue d'exemples dans `lib/sacko/catalog.ts`). Le système l'alimentera par les documents `vitrine/{id}` (Q52) ; les champs à exposer sont ceux du type `Vehicle` de ce dépôt.
+
