@@ -1,0 +1,28 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "tests/**/*.ts",
+    "src/components/ui/**/*.tsx",
+    "src/components/pdf/**/*.{ts,tsx}",
+    "src/components/patterns/**/*.{ts,tsx}",
+    "src/components/layout/**/*.{ts,tsx}",
+    "src/lib/**/*.ts",
+    "src/domain/**/*.ts",
+    "src/server/**/*.ts",
+    "src/data/**/*.{ts,tsx}",
+    "src/features/*/index.ts",
+    "scripts/**/*.mjs"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx}",
+    "tests/**/*.ts",
+    "scripts/**/*.mjs"
+  ],
+  "ignoreDependencies": [
+    "eslint-config-next",
+    "server-only",
+    "postcss",
+    "tailwindcss",
+    "tw-animate-css"
+  ]
+}

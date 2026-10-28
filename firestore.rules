@@ -1,0 +1,54 @@
+rules_version = '2';
+
+// Règles Firestore de Sacko-Green : la vraie barrière d'accès.
+// Les droits viennent des custom claims JWT posés par les actions serveur :
+//   role      : "admin" | "user"
+//   droits    : ["VEHICULES:voir", "CLIENTS:modifier", ...] (absent pour un admin)
+//   speciales : ["VOIR_COUTS", "APPROUVER_PLANCHER", "ANNULER"]
+//   sites     : ["CA", "GN"]
+// Toute nouvelle collection s'ajoute ici dans le même commit que son code.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuth() && request.auth.token.role == 'admin';
+    }
+
+    // Miroir de `peut()` (src/domain/permissions/has-permission.ts). Le droit
+    // « voir » se vérifie côté règles avec peutVoir(), qui accepte n'importe
+    // quelle action du module, comme le fait l'application.
+    function peut(module, action) {
+      return isAdmin()
+        || (isAuth() && ('droits' in request.auth.token)
+            && ((module + ':' + action) in request.auth.token.droits));
+    }
+
+    function peutVoir(module) {
+      return peut(module, 'voir') || peut(module, 'creer')
+        || peut(module, 'modifier') || peut(module, 'supprimer');
+    }
+
+    function aSpeciale(speciale) {
+      return isAdmin()
+        || (isAuth() && ('speciales' in request.auth.token)
+            && (speciale in request.auth.token.speciales));
+    }
+
+    // Comptes : chacun lit sa fiche, l'admin lit tout. Les écritures passent
+    // par les actions serveur (Admin SDK), jamais par le client.
+    match /users/{uid} {
+      allow read: if isAuth() && (request.auth.uid == uid || isAdmin());
+      allow write: if false;
+    }
+
+    // Tout le reste est fermé tant qu'une règle ne l'ouvre pas explicitement.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

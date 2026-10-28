@@ -8,21 +8,20 @@ Système de gestion sur mesure pour **Sacko-Green Inc** (nom légal Sacko-Vert I
 
 **Avant tout travail, lire [`docs/decisions.md`](docs/decisions.md).** Il fait foi : 57 décisions de cadrage, plus les modifications de la section 15 qui remplacent les décisions marquées « modifié ». Ce n'est pas un cahier des charges détaillé : quand un écran ou un champ n'y est pas décrit, proposer une solution à l'utilisateur avant de la coder, puis l'ajouter à `docs/decisions.md`.
 
-## Projet de référence : Faso Gestion
+## Ce qui est déjà en place (28 octobre 2026)
 
-Ce projet reprend la stack, l'architecture et les règles de `FasoDigital6/faso-gestion`. Si ce dépôt n'est pas dans la session, demander à l'ajouter avant de commencer.
+Le squelette a été repris de `FasoDigital6/faso-gestion`, sans la couche multi-entreprises :
 
-**À copier de Faso Gestion** (en adaptant, sans dépendre de lui) :
+- configuration (Next.js 15, TypeScript, ESLint et ses frontières, knip, Vitest, Playwright, Firebase) aux mêmes versions que Faso Gestion (`pnpm-lock.yaml`) ;
+- design system (`src/components/ui`, `layout`, `patterns` sauf `document-form`), kit PDF (`src/components/pdf`), utilitaires (`src/lib`), e-mail Resend (`src/server/email`) ;
+- **couleurs de Sacko-Green** : vert du logo `#015e07` dans `src/app/globals.css`, logo dans `public/sacko/` ;
+- connexion Firebase par cookie (middleware, `src/server/auth`, `auth-context`), écran de connexion, tableau de bord vide ;
+- permissions de Sacko-Green ([`docs/permissions.md`](docs/permissions.md)) : modules × actions, sites, permissions spéciales, modèles Vendeur et Agent Guinée, avec tests ;
+- actions serveur de gestion des comptes (`src/server/actions/user-actions.ts`), sans écran pour l'instant ;
+- règles Firestore et Storage fermées par défaut, sauf `users` ;
+- script `scripts/creer-admin.mjs` pour créer le premier administrateur.
 
-- configuration : `package.json` (dépendances), `next.config.ts`, `tsconfig.json`, `eslint.config.mjs`, `knip.json`, `vitest.config.mts`, `playwright.config.ts`, `components.json`, `firebase.json` ;
-- design system : `src/components/ui/`, `src/components/layout/`, `src/components/patterns/` (data-table, document-form, états, filtres), et `docs/design-system.md`, `docs/ux-guidelines.md`, `docs/patterns.md` ;
-- kit PDF : `src/components/pdf/` (`common.tsx`, `charger.ts`) ;
-- permissions : `src/domain/permissions/` et le skill `.claude/skills/ajouter-permission` ;
-- session et auth : `src/data/session/auth-context.tsx`, `src/server/auth/`, `src/server/firebase/` ;
-- utilitaires : `src/lib/dates-saisie.ts`, `src/lib/utils.ts`, `src/lib/idempotence.ts` ;
-- e-mail : `src/server/email/` (Resend).
-
-**À ne pas copier** : le multi-entreprises (`eid`, `tenantCol`, `tenantDoc`, `entreprise-provider`, superadmin, offres à la carte), les proformas, contrats, BDC, BDL, appels d'offres et la fiscalité guinéenne (`src/domain/fiscalite/`).
+**Faso Gestion reste la référence** pour les briques pas encore reprises (liste paginée, formulaire de document, écrans de gestion des comptes et des paramètres) : si ce dépôt n'est pas dans la session et qu'une de ces briques est nécessaire, demander à l'ajouter. Ne jamais reprendre le multi-entreprises (`eid`, `tenantCol`, `tenantDoc`, `entreprise-provider`, superadmin, offres à la carte), les proformas, contrats, BDC, BDL, appels d'offres ni la fiscalité guinéenne.
 
 ## Carte
 
@@ -47,20 +46,21 @@ docs/             decisions.md, puis modele-donnees.md, calculs.md, permissions.
 5. **Vitrine** : la fiche publique et le site `FasoDigital6/sacko-green-vitrine` lisent uniquement `vitrine/{id}`, tenu à jour par Cloud Function, avec les seuls champs publics (type `Vehicle` de `lib/sacko/catalog.ts` dans ce dépôt). Ne jamais exposer un document privé au navigateur.
 6. **Notifications** : par e-mail uniquement (Resend), derrière une interface d'envoi unique. Pas d'envoi automatisé WhatsApp.
 7. **PDF** : gabarits construits avec le kit `src/components/pdf/common.tsx`, chargés au clic (`await import(...)`), jamais par import statique.
-8. **Documentation dans le même commit que le code** : collection ou champ → `docs/modele-donnees.md` ; calcul → `docs/calculs.md` ; permission → `docs/permissions.md` ; décision nouvelle ou changée → `docs/decisions.md`.
-9. **Terminé = `pnpm check` vert** (lint, cycles, knip, tests, build), et `pnpm test:e2e` si un parcours change (émulateurs uniquement, jamais les projets `sackogreen-dev` ou `-prod`).
-10. Commits en français. Commit ou push seulement à la demande de l'utilisateur.
+8. **Code mort** : knip doit rester vide. `knip.json` déclare les briques du kit (`src/components`, `src/lib`, `src/server`…) comme points d'entrée tant qu'elles ne sont pas toutes utilisées : retirer ces lignes quand les écrans les consomment.
+9. **Documentation dans le même commit que le code** : collection ou champ → `docs/modele-donnees.md` ; calcul → `docs/calculs.md` ; permission → `docs/permissions.md` ; décision nouvelle ou changée → `docs/decisions.md`.
+10. **Terminé = `pnpm check` vert** (lint, cycles, knip, typecheck, tests, build), et `pnpm test:e2e` si un parcours change (émulateurs uniquement, jamais les projets `sackogreen-dev` ou `-prod`).
+11. Commits en français. Commit ou push seulement à la demande de l'utilisateur.
 
 ## Par où commencer
 
 Suivre l'ordre de la section 13 de `docs/decisions.md`, une étape à la fois, chacune montrée à l'utilisateur avant la suivante.
 
-**Étape 1, le socle** :
+**Étape 1, le socle** : la base technique, la connexion et les permissions sont faites. Il reste :
 
-1. initialiser le projet Next.js avec la configuration copiée de Faso Gestion, sans multi-entreprises ;
-2. connexion (Firebase Auth), rôles `admin` / `utilisateur`, droits par module, rattachement à un site (Canada, Guinée ou les deux) et permissions spéciales (« voir les coûts », « approuver sous le plancher », « annuler ») ;
-3. paramètres : taux de change modifiables par l'admin (historisés), taux de TPS et TVQ, pas d'arrondi du prix affiché ;
-4. émulateurs Firebase pour les tests, `pnpm check` vert ;
-5. rédiger `docs/modele-donnees.md` et `docs/permissions.md` pour ce socle.
+1. l'écran **Utilisateurs** (admin) : liste, création avec un modèle de départ, réglage des droits module par module, des sites et des permissions spéciales, désactivation. Les actions serveur existent déjà ;
+2. l'écran **Paramètres** (admin) : taux de change modifiables et historisés (USD, CAD, GNF), taux de TPS et TVQ, pas d'arrondi du prix affiché, identité de l'entreprise pour les documents (type `Entreprise`) ;
+3. les tests e2e de connexion sur émulateurs.
+
+**Démarrer en local** : `pnpm install`, copier `.env.example` en `.env.local` et le remplir (projet `sackogreen-dev`), créer le premier admin avec `node --env-file=.env.local scripts/creer-admin.mjs email "Prénom" "Nom"`, puis `pnpm dev`. Le build a besoin de ces variables.
 
 Région Firebase : `northamerica-northeast1` (Montréal), définitive à la création des projets.
