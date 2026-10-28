@@ -185,3 +185,14 @@ Décisions prises lors de la préparation de la proposition commerciale et du co
 
 **Site vitrine** : il existe déjà dans le dépôt `FasoDigital6/sacko-green-vitrine` (Next.js 16, catalogue d'exemples dans `lib/sacko/catalog.ts`). Le système l'alimentera par les documents `vitrine/{id}` (Q52) ; les champs à exposer sont ceux du type `Vehicle` de ce dépôt.
 
+
+## 16. Écrans du socle et garanties d'accès (28 octobre 2026)
+
+Suite autorisée par Amadou : terminer Utilisateurs, Paramètres et les tests sur émulateurs.
+
+- **Utilisateurs** : liste recherchable (15 comptes au maximum, comptes désactivés inclus), panneau de création/modification, modèles Vendeur et Agent Guinée, matrice des actions par module, sites et permissions spéciales. Confirmation avant désactivation/réactivation. Un compte créé reste visible si son invitation échoue ; l'admin peut renvoyer l'invitation.
+- **Dernier administrateur** : impossible de désactiver ou rétrograder le dernier administrateur actif.
+- **Accès** : vérification de révocation côté serveur et version d'accès dans le jeton et la fiche employé. Un changement de droits ou d'état invalide les anciennes sessions et les anciennes lectures Firestore. Les droits ne sont jamais recopiés d'un ancien jeton dans un nouveau custom token.
+- **Paramètres** : CAD est la base (1 CAD = X USD et Y GNF). Aucun taux de change fictif prérempli. TPS et TVQ réglables séparément. Identité : nom légal, adresse, ville/code postal, pays, téléphone, email, numéros de TPS/TVQ, mention de pied de document et comptes bancaires. Logo Sacko-Green intégré ; aucun éditeur de visuels à cette étape.
+- **Historique** : chaque enregistrement conserve une copie complète datée, avec l'auteur et la révision. L'écran montre les 20 dernières versions, sans effacer les autres. Un enregistrement concurrent ne peut pas écraser une révision plus récente. Les futurs modules métier copieront les taux sur chaque opération (Q15).
+- **Tests** : uniquement `demo-sacko-green`, Auth et Firestore sur 127.0.0.1. Ni .env.local, ni données de développement/production, ni service d'email réel.
