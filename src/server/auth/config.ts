@@ -50,7 +50,7 @@ export const authConfig = {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production" || serverConfig.useSecureCookies,
         sameSite: "lax" as const,
-        maxAge: 1000 * 60 * 60 * 24, // 24 hours
+        maxAge: 60 * 60 * 24, // secondes : 24 heures
     },
     serviceAccount: serverConfig.serviceAccount,
     // Génère un custom token stocké dans le cookie de session, afin que le SDK

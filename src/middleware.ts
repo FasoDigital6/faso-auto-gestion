@@ -22,17 +22,15 @@ export async function middleware(request: NextRequest) {
     cookieSignatureKeys: authConfig.cookieSignatureKeys,
     serviceAccount: authConfig.serviceAccount,
     enableCustomToken: true,
+    checkRevoked: true,
 
     handleValidToken: async ({ decodedToken }, headers) => {
       // Un compte sans rôle n'a été créé ni par un admin ni par le script d'amorçage.
       const role = filterStandardClaims(decodedToken).role as string | undefined;
-      if (!role) {
+      if (!["admin", "user"].includes(role ?? "") && pathname !== "/unauthorized") {
         return NextResponse.redirect(new URL("/unauthorized", request.url));
       }
-      // Déjà connecté sur une page de connexion → tableau de bord.
-      if (isAuthPath) {
-        return NextResponse.redirect(new URL("/", request.url));
-      }
+      // La connexion reste accessible si le serveur refuse une ancienne version d'accès.
       return NextResponse.next({ request: { headers } });
     },
 

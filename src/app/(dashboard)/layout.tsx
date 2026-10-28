@@ -1,4 +1,6 @@
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/server/auth/users-services";
 
 import { GlobalNav } from "@/components/layout/nav";
 import { UserMenu } from "@/components/layout/user-menu";
@@ -13,7 +15,8 @@ export const metadata: Metadata = {
   description: "Gestion des véhicules, clients, conteneurs et paiements de Sacko-Green Inc.",
 };
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  if (!await getCurrentUser()) redirect("/login");
   return (
     <MobileNavProvider>
       <GlobalNav />

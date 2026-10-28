@@ -4,6 +4,7 @@ import type { UserInfo } from "firebase/auth";
 export interface User extends UserInfo {
   idToken: string;
   customToken: string;
+  accessVersion?: string;
   role: string;
   /** Droits `MODULE:action` (absents pour un admin, qui a tout). */
   droits?: string[];
@@ -13,20 +14,3 @@ export interface User extends UserInfo {
   sites?: string[];
 }
 
-/** Document `users/{uid}` : fiche de l'employé, miroir des claims pour l'affichage. */
-export interface userData {
-  id: string;
-  email: string;
-  name: string;
-  nom?: string;
-  prenom?: string;
-  telephone?: string;
-  poste?: string;
-  photoUrl?: string;
-  role: string;
-  droits?: string[];
-  speciales?: string[];
-  sites?: string[];
-  disabled?: boolean;
-  createdAt?: string;
-}
