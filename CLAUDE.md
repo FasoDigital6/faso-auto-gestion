@@ -55,7 +55,7 @@ docs/             decisions.md, puis modele-donnees.md, calculs.md, permissions.
 
 Suivre l'ordre de la section 13 de `docs/decisions.md`, une étape à la fois, chacune montrée à l'utilisateur avant la suivante.
 
-**Étape 1, le socle** : écrans Utilisateurs et Paramètres, historique des taux/taxes/identité, contrôles d'accès et parcours e2e sur émulateurs implémentés. Voir `docs/decisions.md` section 16 et `docs/tests.md` pour les vérifications. La configuration du vrai projet Firebase et la création de son premier administrateur restent à faire si elles n'ont pas encore été réalisées.
+**Étape 1, le socle** : écrans Utilisateurs et Paramètres, historique des taux/taxes/identité, contrôles d'accès et parcours e2e sur émulateurs implémentés. Voir `docs/decisions.md` section 16 et `docs/tests.md` pour les vérifications. Le projet Firebase de développement et son premier administrateur sont maintenant configurés ; état des ressources et accès local dans `docs/firebase-dev.md`.
 
 La prochaine étape métier est **Véhicules** ; la montrer et la cadrer avec l'utilisateur avant de commencer.
 
