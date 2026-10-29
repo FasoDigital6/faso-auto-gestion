@@ -81,7 +81,7 @@ export const AuthProvider: React.FunctionComponent<AuthProviderProps> = ({
 };
 
 /** Claims qui portent les droits (voir `firestore.rules`). */
-const CLAIMS_DROITS = ["role", "droits", "speciales", "sites"];
+const CLAIMS_DROITS = ["role", "droits", "speciales", "sites", "accessVersion"];
 
 /** Charge utile d'un JWT (sans vérification : le serveur l'a déjà vérifié). */
 function chargeDuJeton(jeton: string): Record<string, unknown> {

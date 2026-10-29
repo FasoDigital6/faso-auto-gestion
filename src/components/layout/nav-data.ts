@@ -1,4 +1,4 @@
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, Users, Settings } from "lucide-react";
 
 import { ItemNav } from "./nav-types";
 import { Module } from "@/domain/permissions/permissions";
@@ -29,4 +29,7 @@ export const navItems: NavSection[] = [
 ];
 
 /** Zone d'administration de la barre latérale (réservée aux admins). */
-export const navFooterItems: ItemNav[] = [];
+export const navFooterItems: ItemNav[] = [
+  { name: "Utilisateurs", slug: "utilisateurs", icon: Users, adminSeulement: true },
+  { name: "Paramètres", slug: "parametres", icon: Settings, adminSeulement: true },
+];

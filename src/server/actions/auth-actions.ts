@@ -4,7 +4,7 @@ import { z } from "zod";
 import { cookies, headers } from "next/headers";
 import { signInWithEmailAndPassword, updatePassword } from "firebase/auth";
 import { refreshCookiesWithIdToken } from "next-firebase-auth-edge/lib/next/cookies";
-import { getTokens } from "next-firebase-auth-edge";
+import { getVerifiedSession } from "@/server/auth/session";
 import { auth, authConfig } from "@/server/auth/config";
 
 const loginSchema = z.object({
@@ -55,13 +55,13 @@ export async function updatePasswordAction(formData: z.infer<typeof updatePasswo
 
     try {
         // 1. Récupérer l'utilisateur courant via les cookies
-        const tokens = await getTokens(await cookies(), authConfig);
+        const session = await getVerifiedSession();
 
-        if (!tokens) {
+        if (!session) {
             return { error: "Non authentifié" };
         }
 
-        const email = tokens.decodedToken.email;
+        const email = session.decoded.email;
         if (!email) {
             return { error: "Impossible de récupérer l'email de l'utilisateur" };
         }

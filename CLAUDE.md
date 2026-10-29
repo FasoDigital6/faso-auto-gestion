@@ -17,8 +17,8 @@ Le squelette a été repris de `FasoDigital6/faso-gestion`, sans la couche multi
 - **couleurs de Sacko-Green** : vert du logo `#015e07` dans `src/app/globals.css`, logo dans `public/sacko/` ;
 - connexion Firebase par cookie (middleware, `src/server/auth`, `auth-context`), écran de connexion, tableau de bord vide ;
 - permissions de Sacko-Green ([`docs/permissions.md`](docs/permissions.md)) : modules × actions, sites, permissions spéciales, modèles Vendeur et Agent Guinée, avec tests ;
-- actions serveur de gestion des comptes (`src/server/actions/user-actions.ts`), sans écran pour l'instant ;
-- règles Firestore et Storage fermées par défaut, sauf `users` ;
+- écran Utilisateurs et actions serveur de gestion des comptes (`src/server/actions/user-actions.ts`), réservation transactionnelle de la limite de 15 et révocation des sessions ;
+- règles Firestore : lecture contrôlée des employés et des paramètres, écritures par actions serveur ; Storage fermé par défaut ;
 - script `scripts/creer-admin.mjs` pour créer le premier administrateur.
 
 **Faso Gestion reste la référence** pour les briques pas encore reprises (liste paginée, formulaire de document, écrans de gestion des comptes et des paramètres) : si ce dépôt n'est pas dans la session et qu'une de ces briques est nécessaire, demander à l'ajouter. Ne jamais reprendre le multi-entreprises (`eid`, `tenantCol`, `tenantDoc`, `entreprise-provider`, superadmin, offres à la carte), les proformas, contrats, BDC, BDL, appels d'offres ni la fiscalité guinéenne.
@@ -55,11 +55,9 @@ docs/             decisions.md, puis modele-donnees.md, calculs.md, permissions.
 
 Suivre l'ordre de la section 13 de `docs/decisions.md`, une étape à la fois, chacune montrée à l'utilisateur avant la suivante.
 
-**Étape 1, le socle** : la base technique, la connexion et les permissions sont faites. Il reste :
+**Étape 1, le socle** : écrans Utilisateurs et Paramètres, historique des taux/taxes/identité, contrôles d'accès et parcours e2e sur émulateurs implémentés. Voir `docs/decisions.md` section 16 et `docs/tests.md` pour les vérifications. Le projet Firebase de développement et son premier administrateur sont maintenant configurés ; état des ressources et accès local dans `docs/firebase-dev.md`.
 
-1. l'écran **Utilisateurs** (admin) : liste, création avec un modèle de départ, réglage des droits module par module, des sites et des permissions spéciales, désactivation. Les actions serveur existent déjà ;
-2. l'écran **Paramètres** (admin) : taux de change modifiables et historisés (USD, CAD, GNF), taux de TPS et TVQ, pas d'arrondi du prix affiché, identité de l'entreprise pour les documents (type `Entreprise`) ;
-3. les tests e2e de connexion sur émulateurs.
+La prochaine étape métier est **Véhicules** ; la montrer et la cadrer avec l'utilisateur avant de commencer.
 
 **Démarrer en local** : `pnpm install`, copier `.env.example` en `.env.local` et le remplir (projet `sackogreen-dev`), créer le premier admin avec `node --env-file=.env.local scripts/creer-admin.mjs email "Prénom" "Nom"`, puis `pnpm dev`. Le build a besoin de ces variables.
 
